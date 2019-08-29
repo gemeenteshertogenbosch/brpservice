@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\NaamPersoon;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Bridge\Doctrine\RegistryInterface;
+
+/**
+ * @method NaamPersoon|null find($id, $lockMode = null, $lockVersion = null)
+ * @method NaamPersoon|null findOneBy(array $criteria, array $orderBy = null)
+ * @method NaamPersoon[]    findAll()
+ * @method NaamPersoon[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class NaamPersoonRepository extends ServiceEntityRepository
+{
+    public function __construct(RegistryInterface $registry)
+    {
+        parent::__construct($registry, NaamPersoon::class);
+    }
+
+    // /**
+    //  * @return NaamPersoon[] Returns an array of NaamPersoon objects
+    //  */
+    /*
+    public function findByExampleField($value)
+    {
+        return $this->createQueryBuilder('n')
+            ->andWhere('n.exampleField = :val')
+            ->setParameter('val', $value)
+            ->orderBy('n.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    */
+
+    /*
+    public function findOneBySomeField($value): ?NaamPersoon
+    {
+        return $this->createQueryBuilder('n')
+            ->andWhere('n.exampleField = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+    */
+}
