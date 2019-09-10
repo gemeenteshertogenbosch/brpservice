@@ -3,85 +3,104 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\VerblijfplaatsRepository")
+ * @Gedmo\Loggable
  */
 class Verblijfplaats
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @var \Ramsey\Uuid\UuidInterface
+	 *
+	 * @ORM\Id
+	 * @ORM\Column(type="uuid", unique=true)
+	 * @ORM\GeneratedValue(strategy="CUSTOM")
+	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+	 */
+	private $uuid;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $aanduidingBijHuisnummer;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $funtieAdres;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $huisletter;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="integer", nullable=true)
      */
     private $huisnummer;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $huisnummertoevoeging;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $identificatiecodeNummeraanduiding;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $identificatiecodeVerblijfplaats;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="boolean")
      */
-    private $indentificatieVestigingVanuitBuitenland;
+    private $indentificatieVestigingVanuitBuitenland  = false;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $locatiebeschrijving;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $naamOpenbareRuimte;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $postcode;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $straatnaam;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="boolean")
      */
-    private $vanuitVertrokkenOnbekendWaarheen;
+    private $vanuitVertrokkenOnbekendWaarheen = false;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $woonplaatsnaam;
@@ -97,43 +116,58 @@ class Verblijfplaats
     private $datumIngangGeldigheid;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\Column(type="incompleteDate", nullable=true)
      */
     private $datumInschrijvingInGemeente;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\Column(type="incompleteDate", nullable=true)
      */
     private $datumVestigingInNederland;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Waardetabel")
+     * @Gedmo\Versioned
+     * @ORM\Column(type="incompleteDate", nullable=true)
      */
     private $gemeenteVanInschrijving;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="App\Entity\Waardetabel")
      */
     private $landVanwaarIngeschreven;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\OneToOne(targetEntity="App\Entity\VerblijfBuitenland", inversedBy="verblijfplaats", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true, referencedColumnName="uuid")
      */
     private $verblijfBuitenland;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\Column(type="underInvestigation", nullable=true)
      */
     private $inOnderzoek;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\NatuurlijkPersoon", mappedBy="verblijfplaats", cascade={"persist", "remove"})
+     * @Gedmo\Versioned
+     * @ORM\OneToOne(targetEntity="App\Entity\Ingeschrevenpersoon", mappedBy="verblijfplaats", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
      */
-    private $natuurlijkPersoon;
-
-    public function getId(): ?int
+    private $ingeschrevenpersoon;
+    
+    // On an object level we stil want to be able to gett the id
+    public function getId(): ?string
     {
-        return $this->id;
+    	return $this->uuid;
+    }
+    
+    public function getUuid(): ?string
+    {
+    	return $this->uuid;
     }
 
     public function getAanduidingBijHuisnummer(): ?string
@@ -400,18 +434,18 @@ class Verblijfplaats
         return $this;
     }
 
-    public function getNatuurlijkPersoon(): ?NatuurlijkPersoon
+    public function getIngeschrevenpersoon(): ?Ingeschrevenpersoon
     {
-        return $this->natuurlijkPersoon;
+    	return $this->ingeschrevenpersoon;
     }
 
-    public function setNatuurlijkPersoon(NatuurlijkPersoon $natuurlijkPersoon): self
+    public function setIngeschrevenpersoon(Ingeschrevenpersoon$ingeschrevenpersoon): self
     {
-        $this->natuurlijkPersoon = $natuurlijkPersoon;
+    	$this->ingeschrevenpersoon= $ingeschrevenpersoon;
 
         // set the owning side of the relation if necessary
-        if ($this !== $natuurlijkPersoon->getVerblijfplaats()) {
-            $natuurlijkPersoon->setVerblijfplaats($this);
+    	if ($this !== $ingeschrevenpersoon->getVerblijfplaats()) {
+    		$ingeschrevenpersoon->setVerblijfplaats($this);
         }
 
         return $this;

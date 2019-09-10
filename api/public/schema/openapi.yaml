@@ -5,25 +5,1379 @@ info:
   description: |
     Dit is een commonground voorbeeld applicatie 
           
-    Word lid van het slackkanaal [https://zaakonline.slack.com](https://zaakonline.slack.com) voor ondersteuning door het ontwikkel team. En krijg regelmatig updates over de ontwikkelingen op het gebied van de zaakonline componenten.
-            
-    Om het voor alle partijen zo makkelijk mogelijk te maken, stellen we zo veel mogelijk informatie over dit component openbaar beschikbaar.
-    - [datamodel als pdf](/schema/datamodel.pdf)
-    - [datamodel als mwb](/schema/datamodel.mwb)
-    - [codebase op github]()
-    - [codebase als zip](/archive/master.zip)
-    - [docker container](/) 
-    - [online demo]()
-            
+    API voor het ontsluiten van gegevens van ingeschreven personen en aanverwante gegevens uit de GBA en RNI. Met deze API worden de actuele gegevens van ingeschreven personen, hun kinderen, partners en ouders ontsloten. Ook de gegevens over reisdocumenten worden via deze API ontsloten. Zie de <a href="https://github.com/VNG-Realisatie/Bevragingen-ingeschreven-personen/tree/master/features">Functionele documentatie</a> voor nadere toelichting.
     
-    Applicaties kunnen op deze API alleen wijzigingen uitvoeren waarvoor zij over de juiste rechten(scopes) beschikken. De op deze api beschikbare scopes zijn:
-    - adres:schrijven
-    - adres:lezen
-    - adres:maken
-    - adres:verwijderen   
-                     
-    Voor het gebruik van deze applicatie is een JWT Token nodig, deze hangt altijd vast aan een applicatie, ofwel user. Geldige JWT Tokens worden aangemaakt bij het registreren van een applicatie en kennen een beperkte houdbaarheid. 
-    JWT Tokens kunnen zowel worden verlengd, als opnieuw worden aangevraagd, dit aan de hand van de applicatie id en sleutel.
-    Let er bij het meegeven van JWT tokens op dat deze moet worden voorafgegaan door een Bearer en een spatie, onder de header Authorization. De volledig naam wordt daarmee: 'Authorization: Bearer [TOKEN]'.
-    
-paths: {  }
+paths:
+  /ingeschrevenpersonen:
+    get:
+      tags:
+        - Ingeschrevenpersoon
+      operationId: getIngeschrevenpersoonCollection
+      summary: 'Retrieves the collection of Ingeschrevenpersoon resources.'
+      responses:
+        200:
+          description: 'Ingeschrevenpersoon collection response'
+          content:
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/ld+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/x-yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+            text/csv:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+      parameters:
+        -
+          name: page
+          in: query
+          required: false
+          description: 'The collection page number'
+          schema:
+            type: integer
+  '/ingeschrevenpersonen/{burgerservicenummer}/kinderen/{uuid}':
+    get:
+      tags:
+        - Kind
+      operationId: getKindItem
+      summary: 'Retrieves a Kind resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Kind resource response'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Kind'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Kind'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Kind'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Kind'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Kind'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Kind'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Kind'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Kind'
+        404:
+          description: 'Resource not found'
+  '/ingeschrevenpersonen/{burgerservicenummer}/ouders/{uuid}':
+    get:
+      tags:
+        - Ouder
+      operationId: getOuderItem
+      summary: 'Retrieves a Ouder resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Ouder resource response'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Ouder'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Ouder'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Ouder'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ouder'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Ouder'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Ouder'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Ouder'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Ouder'
+        404:
+          description: 'Resource not found'
+  '/ingeschrevenpersonen/{burgerservicenummer}/partners/{uuid}':
+    get:
+      tags:
+        - Partner
+      operationId: getPartnerItem
+      summary: 'Retrieves a Partner resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Partner resource response'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Partner'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Partner'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Partner'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Partner'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Partner'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Partner'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Partner'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Partner'
+        404:
+          description: 'Resource not found'
+  '/ingeschrevenpersoons/{id}':
+    get:
+      tags:
+        - Ingeschrevenpersoon
+      operationId: getIngeschrevenpersoonItem
+      summary: 'Retrieves a Ingeschrevenpersoon resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Ingeschrevenpersoon resource response'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+        404:
+          description: 'Resource not found'
+    delete:
+      tags:
+        - Ingeschrevenpersoon
+      operationId: deleteIngeschrevenpersoonItem
+      summary: 'Removes the Ingeschrevenpersoon resource.'
+      responses:
+        204:
+          description: 'Ingeschrevenpersoon resource deleted'
+        404:
+          description: 'Resource not found'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    put:
+      tags:
+        - Ingeschrevenpersoon
+      operationId: putIngeschrevenpersoonItem
+      summary: 'Replaces the Ingeschrevenpersoon resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Ingeschrevenpersoon resource updated'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Ingeschrevenpersoon'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Ingeschrevenpersoon'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Ingeschrevenpersoon'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ingeschrevenpersoon'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Ingeschrevenpersoon'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Ingeschrevenpersoon'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Ingeschrevenpersoon'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Ingeschrevenpersoon'
+        description: 'The updated Ingeschrevenpersoon resource'
+    patch:
+      tags:
+        - Ingeschrevenpersoon
+      operationId: patchIngeschrevenpersoonItem
+      summary: 'Updates the Ingeschrevenpersoon resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Ingeschrevenpersoon resource updated'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Ingeschrevenpersoon'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Ingeschrevenpersoon'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Ingeschrevenpersoon'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ingeschrevenpersoon'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Ingeschrevenpersoon'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Ingeschrevenpersoon'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Ingeschrevenpersoon'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Ingeschrevenpersoon'
+        description: 'The updated Ingeschrevenpersoon resource'
+  '/ingeschrevenpersoons/{id}/kinderens':
+    get:
+      tags:
+        - Kind
+        - Ingeschrevenpersoon
+      operationId: api_ingeschrevenpersoons_kinderens_get_subresource
+      summary: 'Retrieves the collection of Kind resources.'
+      responses:
+        200:
+          description: 'Kind collection response'
+          content:
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kind'
+            application/ld+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kind'
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kind'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kind'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kind'
+            application/x-yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kind'
+            text/csv:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kind'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kind'
+        404:
+          description: 'Resource not found'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+  '/ingeschrevenpersoons/{id}/ouders':
+    get:
+      tags:
+        - Ouder
+        - Ingeschrevenpersoon
+      operationId: api_ingeschrevenpersoons_ouders_get_subresource
+      summary: 'Retrieves the collection of Ouder resources.'
+      responses:
+        200:
+          description: 'Ouder collection response'
+          content:
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ouder'
+            application/ld+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ouder'
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ouder'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ouder'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ouder'
+            application/x-yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ouder'
+            text/csv:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ouder'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ouder'
+        404:
+          description: 'Resource not found'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+  '/ingeschrevenpersoons/{id}/partners':
+    get:
+      tags:
+        - Partner
+        - Ingeschrevenpersoon
+      operationId: api_ingeschrevenpersoons_partners_get_subresource
+      summary: 'Retrieves the collection of Partner resources.'
+      responses:
+        200:
+          description: 'Partner collection response'
+          content:
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Partner'
+            application/ld+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Partner'
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Partner'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Partner'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Partner'
+            application/x-yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Partner'
+            text/csv:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Partner'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Partner'
+        404:
+          description: 'Resource not found'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+  /reisdocuments:
+    get:
+      tags:
+        - Reisdocument
+      operationId: getReisdocumentCollection
+      summary: 'Retrieves the collection of Reisdocument resources.'
+      responses:
+        200:
+          description: 'Reisdocument collection response'
+          content:
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reisdocument'
+            application/ld+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reisdocument'
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reisdocument'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reisdocument'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reisdocument'
+            application/x-yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reisdocument'
+            text/csv:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reisdocument'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reisdocument'
+      parameters:
+        -
+          name: page
+          in: query
+          required: false
+          description: 'The collection page number'
+          schema:
+            type: integer
+    post:
+      tags:
+        - Reisdocument
+      operationId: postReisdocumentCollection
+      summary: 'Creates a Reisdocument resource.'
+      responses:
+        201:
+          description: 'Reisdocument resource created'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+          links:
+            GetReisdocumentItem:
+              parameters:
+                id: '$response.body#/id'
+              operationId: getReisdocumentItem
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /reisdocuments/{id}`.'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+        description: 'The new Reisdocument resource'
+  '/reisdocuments/{id}':
+    get:
+      tags:
+        - Reisdocument
+      operationId: getReisdocumentItem
+      summary: 'Retrieves a Reisdocument resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Reisdocument resource response'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+        404:
+          description: 'Resource not found'
+    delete:
+      tags:
+        - Reisdocument
+      operationId: deleteReisdocumentItem
+      summary: 'Removes the Reisdocument resource.'
+      responses:
+        204:
+          description: 'Reisdocument resource deleted'
+        404:
+          description: 'Resource not found'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    put:
+      tags:
+        - Reisdocument
+      operationId: putReisdocumentItem
+      summary: 'Replaces the Reisdocument resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Reisdocument resource updated'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+        description: 'The updated Reisdocument resource'
+    patch:
+      tags:
+        - Reisdocument
+      operationId: patchReisdocumentItem
+      summary: 'Updates the Reisdocument resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Reisdocument resource updated'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Reisdocument'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Reisdocument'
+        description: 'The updated Reisdocument resource'
+  /waardetabels:
+    get:
+      tags:
+        - Waardetabel
+      operationId: getWaardetabelCollection
+      summary: 'Retrieves the collection of Waardetabel resources.'
+      responses:
+        200:
+          description: 'Waardetabel collection response'
+          content:
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Waardetabel'
+            application/ld+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Waardetabel'
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Waardetabel'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Waardetabel'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Waardetabel'
+            application/x-yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Waardetabel'
+            text/csv:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Waardetabel'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Waardetabel'
+      parameters:
+        -
+          name: page
+          in: query
+          required: false
+          description: 'The collection page number'
+          schema:
+            type: integer
+    post:
+      tags:
+        - Waardetabel
+      operationId: postWaardetabelCollection
+      summary: 'Creates a Waardetabel resource.'
+      responses:
+        201:
+          description: 'Waardetabel resource created'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+          links:
+            GetWaardetabelItem:
+              parameters:
+                id: '$response.body#/id'
+              operationId: getWaardetabelItem
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /waardetabels/{id}`.'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+        description: 'The new Waardetabel resource'
+  '/waardetabels/{id}':
+    get:
+      tags:
+        - Waardetabel
+      operationId: getWaardetabelItem
+      summary: 'Retrieves a Waardetabel resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Waardetabel resource response'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+        404:
+          description: 'Resource not found'
+    delete:
+      tags:
+        - Waardetabel
+      operationId: deleteWaardetabelItem
+      summary: 'Removes the Waardetabel resource.'
+      responses:
+        204:
+          description: 'Waardetabel resource deleted'
+        404:
+          description: 'Resource not found'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    put:
+      tags:
+        - Waardetabel
+      operationId: putWaardetabelItem
+      summary: 'Replaces the Waardetabel resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Waardetabel resource updated'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+        description: 'The updated Waardetabel resource'
+    patch:
+      tags:
+        - Waardetabel
+      operationId: patchWaardetabelItem
+      summary: 'Updates the Waardetabel resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Waardetabel resource updated'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Waardetabel'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Waardetabel'
+        description: 'The updated Waardetabel resource'
+components:
+  schemas:
+    Ingeschrevenpersoon:
+      type: object
+      description: ''
+      properties:
+        id:
+          readOnly: true
+          type: string
+        burgerservicenummer:
+          type: string
+        geheimhouding_persoonsgegevens:
+          type: boolean
+        geslachtsaanduiding:
+          type: string
+        leeftijd:
+          type: integer
+        datum_eerste_inschrijving_g_b_a: {  }
+        kiesrecht:
+          type: string
+        naam:
+          type: string
+        in_onderzoek: {  }
+        nationaliteit:
+          type: array
+          items:
+            type: string
+        geboorte:
+          type: string
+        opschorting_bijhouding:
+          type: string
+        overlijden:
+          type: string
+        verblijfplaats:
+          type: string
+        gezagsverhouding:
+          type: string
+        verblijfstitel:
+          type: string
+        ouders:
+          type: array
+          items:
+            type: string
+        kinderen:
+          type: array
+          items:
+            type: string
+        partners:
+          type: array
+          items:
+            type: string
+        reisdocumenten:
+          type: array
+          items:
+            type: string
+    Kind:
+      type: object
+      description: ''
+      properties:
+        id:
+          readOnly: true
+          type: string
+        uuid:
+          readOnly: true
+          type: string
+        burgerservicenummer:
+          type: string
+        leeftijd:
+          type: integer
+        in_onderzoek: {  }
+        naam:
+          type: string
+        geboorte:
+          type: string
+        ingeschrevenpersoon:
+          type: string
+    Ouder:
+      type: object
+      description: ''
+      properties:
+        id:
+          readOnly: true
+          type: string
+        uuid:
+          readOnly: true
+          type: string
+        burgerservicenummer:
+          type: string
+        geslachtsaanduiding:
+          type: string
+        ouder_aanduiding:
+          type: string
+        datum_ingang_familierechtelijke_betreking: {  }
+        naam:
+          type: string
+        in_onderzoek: {  }
+        geboorte:
+          type: string
+        ingeschrevenpersoon:
+          type: string
+    Partner:
+      type: object
+      description: ''
+      properties:
+        id:
+          readOnly: true
+          type: string
+        uuid:
+          readOnly: true
+          type: string
+        burgerservicenummer:
+          type: string
+        geslachtsaanduiding:
+          type: string
+        naam:
+          type: string
+        geboorte:
+          type: string
+        aangaan_huwelijk_partnerschap:
+          type: string
+        ingeschrevenpersoon:
+          type: string
+    Reisdocument:
+      type: object
+      description: ''
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        aanduiding_inhouding_of_vermissing:
+          type: string
+        reisdocumentnummer:
+          type: string
+    Waardetabel:
+      type: object
+      description: ''
+      properties:
+        id:
+          readOnly: true
+          type: string
+        code:
+          type: string
+        omschrijving:
+          type: string

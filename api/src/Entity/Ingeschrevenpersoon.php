@@ -3,120 +3,174 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ApiResource()
- * @ORM\Entity(repositoryClass="App\Repository\NatuurlijkPersoonRepository")
+ * @ApiResource(
+ *      subresourceOperations={
+ *          "api_ingeschrevenpersoons_kinderens_get_subresource"={
+ *              "method"="GET",
+ *              "path"="/ingeschrevenpersonen/{burgerservicenummer}/kinderen",
+ *              "swagger_context" = {"summary"="ingeschrevenNatuurlijkPersonenKinderen", "description"="Beschrijving"}
+ *          },
+ *          "api_ingeschrevenpersoons_ouders_get_subresource"={
+ *              "method"="GET",
+ *              "path"="/ingeschrevenpersonen/{burgerservicenummer}/ouders",
+ *              "swagger_context" = {"summary"="ingeschrevenNatuurlijkPersonenOuders", "description"="Beschrijving"}
+ *          },
+ *          "api_ingeschrevenpersoons_partners_get_subresource"={
+ *              "method"="GET",
+ *              "path"="/ingeschrevenpersonen/{burgerservicenummer}/partners",
+ *              "swagger_context" = {"summary"="ingeschrevenNatuurlijkPersonenPartners", "description"="Beschrijving"}
+ *          },
+ *      },
+ *     collectionOperations={
+ *     		"get"={"method"="GET","path"="/ingeschrevenpersonen","swagger_context" = {"summary"="ingeschrevenNatuurlijkPersonen", "description"="Beschrijving"}},
+ *     		"get_on_bsn"={
+ *     			"method"="GET", 
+ *     			"path"="/ingeschrevenpersonen/{burgerservicenummer}",
+ *     			"requirements"={"burgerservicenummer"="\d+"}, 
+ *     			"defaults"={"color"="brown"}, 
+ *     			"options"={"my_option"="my_option_value"},
+ *     			"swagger_context" = {"summary"="ingeschrevenNatuurlijkPersoon", "description"="Beschrijving"}
+ *     		},
+ *     },
+ *     itemOperations={
+ *     		"get"={
+ *     			"method"="GET", 
+ *     			"path"="/ingeschrevenpersonen/uuid/{id}",
+ *     			"swagger_context" = {"summary"="ingeschrevenNatuurlijkPersoonUui", "description"="Beschrijving"}
+ *     		}
+ *     }
+ * )
+ * @ORM\Entity(repositoryClass="App\Repository\IngeschrevenpersoonRepository")
+ * @Gedmo\Loggable
  */
-class NatuurlijkPersoon
+class Ingeschrevenpersoon
 {
+	/**
+	 * @var \Ramsey\Uuid\UuidInterface
+	 *
+     * @ApiProperty(identifier=true)
+	 * @ORM\Id
+	 * @ORM\Column(type="uuid", unique=true)
+	 * @ORM\GeneratedValue(strategy="CUSTOM")
+	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+	 */
+	private $id;
+	
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=9)
      */
     private $burgerservicenummer;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="boolean")
      */
     private $geheimhoudingPersoonsgegevens;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=7)
      */
     private $geslachtsaanduiding;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="integer", nullable=true)
      */
     private $leeftijd;
 
     /**
-     * @ORM\Column(type="object")
+     * @Gedmo\Versioned
+     * @ORM\Column(type="incompleteDate",nullable=true)
      */
     private $datumEersteInschrijvingGBA;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="object")
      */
     private $kiesrecht;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\NaamPersoon", inversedBy="natuurlijkPersoon", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @Gedmo\Versioned
+     * @ORM\OneToOne(targetEntity="App\Entity\NaamPersoon", inversedBy="ingeschrevenpersoon", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false, referencedColumnName="uuid")
      */
     private $naam;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\Column(type="underInvestigation", nullable=true)
      */
     private $inOnderzoek;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Nationaliteit", mappedBy="natuurlijkPersoon", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Nationaliteit", mappedBy="ingeschrevenpersoon", orphanRemoval=true)
      */
     private $nationaliteit;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Geboorte", inversedBy="natuurlijkPersoon", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity="App\Entity\Geboorte", inversedBy="ingeschrevenpersoon", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true, referencedColumnName="uuid")
      */
     private $geboorte;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\OpschortingBijhouding", inversedBy="natuurlijkPersoon", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\OpschortingBijhouding", inversedBy="ingeschrevenpersoon", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true, referencedColumnName="uuid")
      */
     private $opschortingBijhouding;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Overlijden", inversedBy="natuurlijkPersoon", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Overlijden", inversedBy="ingeschrevenpersoon", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true, referencedColumnName="uuid")
      */
     private $overlijden;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Verblijfplaats", inversedBy="natuurlijkPersoon", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity="App\Entity\Verblijfplaats", inversedBy="ingeschrevenpersoon", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true, referencedColumnName="uuid")
      */
     private $verblijfplaats;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Gezagsverhouding", inversedBy="verblijfstitel", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Gezagsverhouding", inversedBy="ingeschrevenpersoon", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true, referencedColumnName="uuid")
      */
     private $gezagsverhouding;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Verblijfstitel", inversedBy="natuurlijkPersoon", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Verblijfstitel", inversedBy="ingeschrevenpersoon", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true, referencedColumnName="uuid")
      */
     private $verblijfstitel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Ouder", mappedBy="natuurlijkPersoon", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Ouder", mappedBy="ingeschrevenpersoon", orphanRemoval=true)
+     * @ApiSubresource
      */
     private $ouders;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Kind", mappedBy="natuurlijkPersoon", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Kind", mappedBy="ingeschrevenpersoon", orphanRemoval=true)
+     * @ApiSubresource
      */
     private $kinderen;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Partner", mappedBy="natuurlijkPersoon", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Partner", mappedBy="ingeschrevenpersoon", orphanRemoval=true)
+     * @ApiSubresource
      */
     private $partners;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Reisdocument", mappedBy="natuurlijkPersoon", orphanRemoval=true)
-     */
-    private $reisdocumenten;
 
     public function __construct()
     {
@@ -124,14 +178,14 @@ class NatuurlijkPersoon
         $this->ouders = new ArrayCollection();
         $this->kinderen = new ArrayCollection();
         $this->partners = new ArrayCollection();
-        $this->reisdocumenten = new ArrayCollection();
     }
-
-    public function getId(): ?int
+    
+    // On an object level we stil want to be able to gett the id
+    public function getId(): ?string
     {
-        return $this->id;
+    	return $this->id;
     }
-
+    
     public function getBurgerservicenummer(): ?string
     {
         return $this->burgerservicenummer;
@@ -418,37 +472,6 @@ class NatuurlijkPersoon
             // set the owning side to null (unless already changed)
             if ($partner->getNatuurlijkPersoon() === $this) {
                 $partner->setNatuurlijkPersoon(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Reisdocument[]
-     */
-    public function getReisdocumenten(): Collection
-    {
-        return $this->reisdocumenten;
-    }
-
-    public function addReisdocumenten(Reisdocument $reisdocumenten): self
-    {
-        if (!$this->reisdocumenten->contains($reisdocumenten)) {
-            $this->reisdocumenten[] = $reisdocumenten;
-            $reisdocumenten->setNatuurlijkPersoon($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReisdocumenten(Reisdocument $reisdocumenten): self
-    {
-        if ($this->reisdocumenten->contains($reisdocumenten)) {
-            $this->reisdocumenten->removeElement($reisdocumenten);
-            // set the owning side to null (unless already changed)
-            if ($reisdocumenten->getNatuurlijkPersoon() === $this) {
-                $reisdocumenten->setNatuurlijkPersoon(null);
             }
         }
 

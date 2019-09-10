@@ -3,52 +3,69 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OverlijdenRepository")
+ * @Gedmo\Loggable
  */
 class Overlijden
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @var \Ramsey\Uuid\UuidInterface
+	 *
+	 * @ORM\Id
+	 * @ORM\Column(type="uuid", unique=true)
+	 * @ORM\GeneratedValue(strategy="CUSTOM")
+	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+	 */
+	private $uuid;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="boolean")
      */
     private $indicatieOverleden;
 
     /**
-     * @ORM\Column(type="object")
+     * @Gedmo\Versioned
+     * @ORM\Column(type="incompleteDate")
      */
     private $datum;
-
+    
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\ManyToOne(targetEntity="App\Entity\Waardetabel")
      */
     private $land;
-
+    
     /**
-     * @ORM\Column(type="object")
+     * @Gedmo\Versioned
+     * @ORM\ManyToOne(targetEntity="App\Entity\Waardetabel")
      */
     private $plaats;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\Column(type="underInvestigation", nullable=true)
      */
     private $inOnderzoek;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\NatuurlijkPersoon", mappedBy="overlijden", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Ingeschrevenpersoon", mappedBy="overlijden", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $natuurlijkPersoon;
-
-    public function getId(): ?int
+    private $ingeschrevenpersoon;    
+    
+    // On an object level we stil want to be able to gett the id
+    public function getId(): ?string
     {
-        return $this->id;
+    	return $this->uuid;
+    }
+    
+    public function getUuid(): ?string
+    {
+    	return $this->uuid;
     }
 
     public function getIndicatieOverleden(): ?bool
@@ -75,28 +92,28 @@ class Overlijden
         return $this;
     }
 
-    public function getLand()
+    public function getLand(): ?Waardetabel
     {
-        return $this->land;
+    	return $this->land;
     }
-
-    public function setLand($land): self
+    
+    public function setLand(?Waardetabel $land): self
     {
-        $this->land = $land;
-
-        return $this;
+    	$this->land = $land;
+    	
+    	return $this;
     }
-
-    public function getPlaats()
+    
+    public function getPlaats(): ?Waardetabel
     {
-        return $this->plaats;
+    	return $this->plaats;
     }
-
-    public function setPlaats($plaats): self
+    
+    public function setPlaats(?Waardetabel $plaats): self
     {
-        $this->plaats = $plaats;
-
-        return $this;
+    	$this->plaats = $plaats;
+    	
+    	return $this;
     }
 
     public function getInOnderzoek()
@@ -111,19 +128,19 @@ class Overlijden
         return $this;
     }
 
-    public function getNatuurlijkPersoon(): ?NatuurlijkPersoon
+    public function getIngeschrevenpersoon(): ?Ingeschrevenpersoon
     {
-        return $this->natuurlijkPersoon;
+    	return $this->ingeschrevenpersoon;
     }
 
-    public function setNatuurlijkPersoon(?NatuurlijkPersoon $natuurlijkPersoon): self
+    public function setIngeschrevenpersoon(?Ingeschrevenpersoon $ingeschrevenpersoon): self
     {
-        $this->natuurlijkPersoon = $natuurlijkPersoon;
+    	$this->ingeschrevenpersoon = $ingeschrevenpersoon;
 
         // set (or unset) the owning side of the relation if necessary
-        $newOverlijden = $natuurlijkPersoon === null ? null : $this;
-        if ($newOverlijden !== $natuurlijkPersoon->getOverlijden()) {
-            $natuurlijkPersoon->setOverlijden($newOverlijden);
+    	$newOverlijden = $ingeschrevenpersoon === null ? null : $this;
+    	if ($newOverlijden !== $ingeschrevenpersoon->getOverlijden()) {
+    		$ingeschrevenpersoon->setOverlijden($newOverlijden);
         }
 
         return $this;

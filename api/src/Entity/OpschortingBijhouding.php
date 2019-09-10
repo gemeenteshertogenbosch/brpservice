@@ -3,37 +3,51 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OpschortingBijhoudingRepository")
+ * @Gedmo\Loggable
  */
 class OpschortingBijhouding
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @var \Ramsey\Uuid\UuidInterface
+	 *
+	 * @ORM\Id
+	 * @ORM\Column(type="uuid", unique=true)
+	 * @ORM\GeneratedValue(strategy="CUSTOM")
+	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+	 */
+	private $uuid;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $reden;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\Column(type="incompleteDate")
      */
     private $datum;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\NatuurlijkPersoon", mappedBy="opschortingBijhouding", cascade={"persist", "remove"})
+     * @Gedmo\Versioned
+     * @ORM\OneToOne(targetEntity="App\Entity\Ingeschrevenpersoon", mappedBy="opschortingBijhouding", cascade={"persist", "remove"})
      */
-    private $natuurlijkPersoon;
-
-    public function getId(): ?int
+    private $ingeschrevenpersoon;
+    
+    // On an object level we stil want to be able to gett the id
+    public function getId(): ?string
     {
-        return $this->id;
+    	return $this->uuid;
+    }
+    
+    public function getUuid(): ?string
+    {
+    	return $this->uuid;
     }
 
     public function getReden(): ?string
@@ -60,19 +74,19 @@ class OpschortingBijhouding
         return $this;
     }
 
-    public function getNatuurlijkPersoon(): ?NatuurlijkPersoon
+    public function getIngeschrevenpersoon(): ?Ingeschrevenpersoon
     {
-        return $this->natuurlijkPersoon;
+    	return $this->ingeschrevenpersoon;
     }
 
-    public function setNatuurlijkPersoon(?NatuurlijkPersoon $natuurlijkPersoon): self
+    public function setIngeschrevenpersoon(?Ingeschrevenpersoon $ingeschrevenpersoon): self
     {
-        $this->natuurlijkPersoon = $natuurlijkPersoon;
+    	$this->ingeschrevenpersoon= $ingeschrevenpersoon;
 
         // set (or unset) the owning side of the relation if necessary
-        $newOpschortingBijhouding = $natuurlijkPersoon === null ? null : $this;
-        if ($newOpschortingBijhouding !== $natuurlijkPersoon->getOpschortingBijhouding()) {
-            $natuurlijkPersoon->setOpschortingBijhouding($newOpschortingBijhouding);
+    	$newOpschortingBijhouding = $ingeschrevenpersoon=== null ? null : $this;
+    	if ($newOpschortingBijhouding !== $ingeschrevenpersoon->getOpschortingBijhouding()) {
+    		$ingeschrevenpersoon->setOpschortingBijhouding($newOpschortingBijhouding);
         }
 
         return $this;

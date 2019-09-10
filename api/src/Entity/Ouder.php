@@ -2,19 +2,29 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OuderRepository")
+ * @ApiResource(
+ *     collectionOperations={},
+ *     itemOperations={"get"={"method"="GET","path"="/ingeschrevenpersonen/{burgerservicenummer}/ouders/{uuid}.{_format}","swagger_context" = {"summary"="ingeschrevenNatuurlijkPersoonOuderUuid", "description"="Beschrijving"}}}
+ * )
+ * @Gedmo\Loggable
  */
 class Ouder
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @var \Ramsey\Uuid\UuidInterface
+	 *
+	 * @ORM\Id
+	 * @ORM\Column(type="uuid", unique=true)
+	 * @ORM\GeneratedValue(strategy="CUSTOM")
+	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+	 */
+	private $uuid;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -22,46 +32,59 @@ class Ouder
     private $burgerservicenummer;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=7)
      */
     private $geslachtsaanduiding;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=7)
      */
     private $ouderAanduiding;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\Column(type="incompleteDate")
      */
     private $datumIngangFamilierechtelijkeBetreking;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\OneToOne(targetEntity="App\Entity\NaamPersoon", inversedBy="ouder", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, referencedColumnName="uuid")
      */
     private $naam;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\Column(type="underInvestigation", nullable=true)
      */
     private $inOnderzoek;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\OneToOne(targetEntity="App\Entity\Geboorte", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, referencedColumnName="uuid")
      */
     private $geboorte;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\NatuurlijkPersoon", inversedBy="ouders")
+     * @Gedmo\Versioned
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ingeschrevenpersoon", inversedBy="ouders")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $natuurlijkPersoon;
-
-    public function getId(): ?int
+    private $ingeschrevenpersoon;
+    
+    // On an object level we stil want to be able to gett the id
+    public function getId(): ?string
     {
-        return $this->id;
+    	return $this->uuid;
+    }
+    
+    public function getUuid(): ?string
+    {
+    	return $this->uuid;
     }
 
     public function getBurgerservicenummer(): ?string
@@ -148,14 +171,14 @@ class Ouder
         return $this;
     }
 
-    public function getNatuurlijkPersoon(): ?NatuurlijkPersoon
+    public function getIngeschrevenpersoon(): ?Ingeschrevenpersoon
     {
-        return $this->natuurlijkPersoon;
+    	return $this->ingeschrevenpersoon;
     }
 
-    public function setNatuurlijkPersoon(?NatuurlijkPersoon $natuurlijkPersoon): self
+    public function setIngeschrevenpersoon(?Ingeschrevenpersoon $ingeschrevenpersoon): self
     {
-        $this->natuurlijkPersoon = $natuurlijkPersoon;
+    	$this->ingeschrevenpersoon = $ingeschrevenpersoon;
 
         return $this;
     }

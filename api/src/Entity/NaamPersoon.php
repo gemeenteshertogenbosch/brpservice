@@ -3,72 +3,87 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\NaamPersoonRepository")
+ * @Gedmo\Loggable
  */
 class NaamPersoon
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @var \Ramsey\Uuid\UuidInterface
+	 *
+	 * @ORM\Id
+	 * @ORM\Column(type="uuid", unique=true)
+	 * @ORM\GeneratedValue(strategy="CUSTOM")
+	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+	 */
+	private $uuid;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $geslachtsnaam;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $voorletters;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $voornamen;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $voorvoegsel;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\Column(type="underInvestigation", nullable=true)
      */
     private $inOnderzoek;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $aanhef;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $aanschrijfwijze;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $gebuikInLopendeTekst;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\NatuurlijkPersoon", mappedBy="naam", cascade={"persist", "remove"})
+     * @Gedmo\Versioned
+     * @ORM\OneToOne(targetEntity="App\Entity\Ingeschrevenpersoon", mappedBy="naam", cascade={"persist", "remove"})
      */
-    private $natuurlijkPersoon;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Ouder", mappedBy="naam", cascade={"persist", "remove"})
-     */
-    private $ouder;
-
-    public function getId(): ?int
+    private $ingeschrevenpersoon;
+    
+    // On an object level we stil want to be able to gett the id
+    public function getId(): ?string
     {
-        return $this->id;
+    	return $this->uuid;
+    }
+    
+    public function getUuid(): ?string
+    {
+    	return $this->uuid;
     }
 
     public function getGeslachtsnaam(): ?string
@@ -167,35 +182,18 @@ class NaamPersoon
         return $this;
     }
 
-    public function getNatuurlijkPersoon(): ?NatuurlijkPersoon
+    public function getIngeschrevenpersoon(): ?Ingeschrevenpersoon
     {
-        return $this->natuurlijkPersoon;
+    	return $this->ingeschrevenpersoon ;
     }
 
-    public function setNatuurlijkPersoon(NatuurlijkPersoon $natuurlijkPersoon): self
+    public function setIngeschrevenpersoon(Ingeschrevenpersoon $ingeschrevenpersoon): self
     {
-        $this->natuurlijkPersoon = $natuurlijkPersoon;
+    	$this->ingeschrevenpersoon = $ingeschrevenpersoon;
 
         // set the owning side of the relation if necessary
-        if ($this !== $natuurlijkPersoon->getNaam()) {
-            $natuurlijkPersoon->setNaam($this);
-        }
-
-        return $this;
-    }
-
-    public function getOuder(): ?Ouder
-    {
-        return $this->ouder;
-    }
-
-    public function setOuder(Ouder $ouder): self
-    {
-        $this->ouder = $ouder;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $ouder->getNaam()) {
-            $ouder->setNaam($this);
+    	if ($this !== $ingeschrevenpersoon->getNaam()) {
+    		$ingeschrevenpersoon->setNaam($this);
         }
 
         return $this;

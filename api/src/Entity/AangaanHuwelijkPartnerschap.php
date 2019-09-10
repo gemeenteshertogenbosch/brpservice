@@ -3,47 +3,63 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AangaanHuwelijkPartnerschapRepository")
+ * @Gedmo\Loggable
  */
 class AangaanHuwelijkPartnerschap
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @var \Ramsey\Uuid\UuidInterface
+	 *
+	 * @ORM\Id
+	 * @ORM\Column(type="uuid", unique=true)
+	 * @ORM\GeneratedValue(strategy="CUSTOM")
+	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+	 */
+	private $uuid;
 
     /**
-     * @ORM\Column(type="object")
+     * @Gedmo\Versioned
+     * @ORM\Column(type="incompleteDate")
      */
     private $datum;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="App\Entity\Waardetabel")
      */
     private $land;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="App\Entity\Waardetabel")
      */
     private $plaats;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\Column(type="underInvestigation", nullable=true)
      */
     private $inOnderzoek;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\OneToOne(targetEntity="App\Entity\Partner", mappedBy="aangaanHuwelijkPartnerschap", cascade={"persist", "remove"})
      */
     private $partner;
-
-    public function getId(): ?int
+    
+    // On an object level we stil want to be able to gett the id
+    public function getId(): ?string
     {
-        return $this->id;
+    	return $this->uuid;
+    }
+    
+    public function getUuid(): ?string
+    {
+    	return $this->uuid;
     }
 
     public function getDatum()

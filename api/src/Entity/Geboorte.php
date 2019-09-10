@@ -3,42 +3,67 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\GeboorteRepository")
+ * @Gedmo\Loggable
  */
 class Geboorte
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @var \Ramsey\Uuid\UuidInterface
+	 *
+	 * @ORM\Id
+	 * @ORM\Column(type="uuid", unique=true)
+	 * @ORM\GeneratedValue(strategy="CUSTOM")
+	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+	 */
+	private $uuid;
 
     /**
-     * @ORM\Column(type="object")
+     * @todo nullable moet hier wel vanaf
+     * @Gedmo\Versioned
+     * @ORM\ManyToOne(targetEntity="App\Entity\Waardetabel")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $land;
+    
+    /**
+     * @todo nullable moet hier wel vanaf
+     * @Gedmo\Versioned
+     * @ORM\ManyToOne(targetEntity="App\Entity\Waardetabel")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $plaats;
+    
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="incompleteDate",nullable=true)
      */
     private $datum;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
-     */
-    private $land;
-
-    /**
-     * @ORM\Column(type="object", nullable=true)
-     */
-    private $plaats;
-
-    /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\Column(type="underInvestigation", nullable=true)
      */
     private $inOnderzoek;
-
-    public function getId(): ?int
+    
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Ingeschrevenpersoon", mappedBy="overlijden", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $ingeschrevenpersoon;    
+    
+    // On an object level we stil want to be able to gett the id
+    public function getId(): ?string
     {
-        return $this->id;
+    	return $this->uuid;
+    }
+    
+    public function getUuid(): ?string
+    {
+    	return $this->uuid;
     }
 
     public function getDatum()
@@ -53,28 +78,28 @@ class Geboorte
         return $this;
     }
 
-    public function getLand()
+    public function getLand(): ?Waardetabel
     {
-        return $this->land;
+    	return $this->land;
     }
-
-    public function setLand($land): self
+    
+    public function setLand(?Waardetabel $land): self
     {
-        $this->land = $land;
-
-        return $this;
+    	$this->land = $land;
+    	
+    	return $this;
     }
-
-    public function getPlaats()
+    
+    public function getPlaats(): ?Waardetabel
     {
-        return $this->plaats;
+    	return $this->plaats;
     }
-
-    public function setPlaats($plaats): self
+    
+    public function setPlaats(?Waardetabel $plaats): self
     {
-        $this->plaats = $plaats;
-
-        return $this;
+    	$this->plaats = $plaats;
+    	
+    	return $this;
     }
 
     public function getInOnderzoek()
@@ -87,5 +112,23 @@ class Geboorte
         $this->inOnderzoek = $inOnderzoek;
 
         return $this;
+    }
+    
+    public function getIngeschrevenpersoon(): ?Ingeschrevenpersoon
+    {
+    	return $this->ingeschrevenpersoon;
+    }
+    
+    public function setIngeschrevenpersoon(?Ingeschrevenpersoon $ingeschrevenpersoon): self
+    {
+    	$this->ingeschrevenpersoon = $ingeschrevenpersoon;
+    	
+    	// set (or unset) the owning side of the relation if necessary
+    	$newGeboorte = $ingeschrevenpersoon === null ? null : $this;
+    	if ($newGeboorte!== $ingeschrevenpersoon->getGeboorte()) {
+    		$ingeschrevenpersoon->setGeboorte($newGeboorte);
+    	}
+    	
+    	return $this;
     }
 }

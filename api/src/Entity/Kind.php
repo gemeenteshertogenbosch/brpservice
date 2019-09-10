@@ -2,19 +2,29 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\KindRepository")
+ * @ApiResource(
+ *     collectionOperations={},
+ *     itemOperations={"get"={"method"="GET","path"="/ingeschrevenpersonen/{burgerservicenummer}/kinderen/{uuid}.{_format}","swagger_context" = {"summary"="ingeschrevenNatuurlijkPersoonKindUuid", "description"="Beschrijving"}}}
+ * )
+ * @Gedmo\Loggable
  */
 class Kind
-{
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+{    
+	/**
+	 * @var \Ramsey\Uuid\UuidInterface
+	 *
+	 * @ORM\Id
+	 * @ORM\Column(type="uuid", unique=true)
+	 * @ORM\GeneratedValue(strategy="CUSTOM")
+	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+	 */
+    private $uuid;
 
     /**
      * @ORM\Column(type="string", length=9)
@@ -27,31 +37,41 @@ class Kind
     private $leeftijd;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\Column(type="underInvestigation", nullable=true)
      */
     private $inOnderzoek;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\OneToOne(targetEntity="App\Entity\NaamPersoon", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, referencedColumnName="uuid")
      */
     private $naam;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\OneToOne(targetEntity="App\Entity\Geboorte", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, referencedColumnName="uuid")
      */
     private $geboorte;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\NatuurlijkPersoon", inversedBy="kinderen")
+     * @Gedmo\Versioned
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ingeschrevenpersoon", inversedBy="kinderen")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $natuurlijkPersoon;
-
-    public function getId(): ?int
+    private $ingeschrevenpersoon;       
+    
+    // On an object level we stil want to be able to gett the id
+    public function getId(): ?string
     {
-        return $this->id;
+    	return $this->uuid;
+    }
+    
+    public function getUuid(): ?string
+    {
+    	return $this->uuid;
     }
 
     public function getBurgerservicenummer(): ?string
@@ -114,14 +134,14 @@ class Kind
         return $this;
     }
 
-    public function getNatuurlijkPersoon(): ?NatuurlijkPersoon
+    public function getIngeschrevenpersoon(): ?Ingeschrevenpersoon
     {
-        return $this->natuurlijkPersoon;
+    	return $this->ingeschrevenpersoon;
     }
 
-    public function setNatuurlijkPersoon(?NatuurlijkPersoon $natuurlijkPersoon): self
+    public function setIngeschrevenpersoon(?Ingeschrevenpersoon $ingeschrevenpersoon): self
     {
-        $this->natuurlijkPersoon = $natuurlijkPersoon;
+    	$this->ingeschrevenpersoon = $ingeschrevenpersoon;
 
         return $this;
     }

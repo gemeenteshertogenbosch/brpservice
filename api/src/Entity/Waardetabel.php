@@ -11,12 +11,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Waardetabel
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @var \Ramsey\Uuid\UuidInterface
+	 *
+	 * @ORM\Id
+	 * @ORM\Column(type="uuid", unique=true)
+	 * @ORM\GeneratedValue(strategy="CUSTOM")
+	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+	 */
+	private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -27,12 +30,14 @@ class Waardetabel
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $omschrijving;
-
-    public function getId(): ?int
+    
+    
+    // On an object level we stil want to be able to gett the id
+    public function getId(): ?string
     {
-        return $this->id;
+    	return $this->id;
     }
-
+   
     public function getCode(): ?string
     {
         return $this->code;

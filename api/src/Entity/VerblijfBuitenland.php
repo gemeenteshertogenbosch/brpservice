@@ -3,53 +3,64 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\VerblijfBuitenlandRepository")
+ * @Gedmo\Loggable
  */
 class VerblijfBuitenland
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @var \Ramsey\Uuid\UuidInterface
+	 *
+	 * @ORM\Id
+	 * @ORM\Column(type="uuid", unique=true)
+	 * @ORM\GeneratedValue(strategy="CUSTOM")
+	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+	 */
+	private $uuid;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $adresregel1;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $adresRegel2;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $adresRegel3;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="boolean")
      */
     private $vertrokkenOnbekendWaarheen;
-
+    
     /**
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="App\Entity\Waardetabel")
      */
     private $land;
+    
+    /**
+     * @Gedmo\Versioned
+     * @ORM\ManyToOne(targetEntity="App\Entity\Waardetabel")
+     */
+    private $plaats;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Verblijfplaats", mappedBy="verblijfBuitenland", cascade={"persist", "remove"})
      */
     private $verblijfplaats;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getAdresregel1(): ?string
     {
@@ -101,14 +112,26 @@ class VerblijfBuitenland
 
     public function getLand(): ?Waardetabel
     {
-        return $this->land;
+    	return $this->land;
     }
-
+    
     public function setLand(?Waardetabel $land): self
     {
-        $this->land = $land;
-
-        return $this;
+    	$this->land = $land;
+    	
+    	return $this;
+    }
+    
+    public function getPlaats(): ?Waardetabel
+    {
+    	return $this->plaats;
+    }
+    
+    public function setPlaats(?Waardetabel $plaats): self
+    {
+    	$this->plaats = $plaats;
+    	
+    	return $this;
     }
 
     public function getVerblijfplaats(): ?Verblijfplaats

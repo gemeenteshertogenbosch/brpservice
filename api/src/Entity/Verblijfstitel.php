@@ -3,47 +3,63 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\VerblijfstitelRepository")
+ * @Gedmo\Loggable
  */
 class Verblijfstitel
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @var \Ramsey\Uuid\UuidInterface
+	 *
+	 * @ORM\Id
+	 * @ORM\Column(type="uuid", unique=true)
+	 * @ORM\GeneratedValue(strategy="CUSTOM")
+	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+	 */
+	private $uuid;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="App\Entity\Waardetabel")
      */
     private $aanduiding;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\Column(type="incompleteDate")
      */
     private $datumEinde;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\Column(type="incompleteDate")
      */
     private $datumIngang;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\Column(type="underInvestigation", nullable=true)
      */
     private $inOnderzoek;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\NatuurlijkPersoon", mappedBy="verblijfstitel", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Ingeschrevenpersoon", mappedBy="verblijfstitel", cascade={"persist", "remove"})
      */
-    private $natuurlijkPersoon;
-
-    public function getId(): ?int
+    private $ingeschrevenpersoon;
+    
+    
+    // On an object level we stil want to be able to gett the id
+    public function getId(): ?string
     {
-        return $this->id;
+    	return $this->id;
+    }
+    
+    public function getUuid(): ?string
+    {
+    	return $this->id;
     }
 
     public function getAanduiding(): ?Waardetabel
@@ -94,19 +110,19 @@ class Verblijfstitel
         return $this;
     }
 
-    public function getNatuurlijkPersoon(): ?NatuurlijkPersoon
+    public function getIngeschrevenpersoon(): ?Ingeschrevenpersoon
     {
-        return $this->natuurlijkPersoon;
+    	return $this->ingeschrevenpersoon;
     }
 
-    public function setNatuurlijkPersoon(?NatuurlijkPersoon $natuurlijkPersoon): self
+    public function setIngeschrevenpersoon(?Ingeschrevenpersoon $ingeschrevenpersoon): self
     {
-        $this->natuurlijkPersoon = $natuurlijkPersoon;
+    	$this->ingeschrevenpersoon= $ingeschrevenpersoon;
 
         // set (or unset) the owning side of the relation if necessary
-        $newVerblijfstitel = $natuurlijkPersoon === null ? null : $this;
-        if ($newVerblijfstitel !== $natuurlijkPersoon->getVerblijfstitel()) {
-            $natuurlijkPersoon->setVerblijfstitel($newVerblijfstitel);
+    	$newVerblijfstitel = $ingeschrevenpersoon=== null ? null : $this;
+    	if ($newVerblijfstitel !== $ingeschrevenpersoon->getVerblijfstitel()) {
+    		$ingeschrevenpersoon->setVerblijfstitel($newVerblijfstitel);
         }
 
         return $this;

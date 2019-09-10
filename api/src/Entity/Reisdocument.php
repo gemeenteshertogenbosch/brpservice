@@ -4,10 +4,12 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\ReisdocumentRepository")
+ * @Gedmo\Loggable
  */
 class Reisdocument
 {
@@ -19,23 +21,26 @@ class Reisdocument
     private $id;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $aanduidingInhoudingOfVermissing;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $reisdocumentnummer;
-
-    public function getId(): ?int
+    
+    // On an object level we stil want to be able to gett the id
+    public function getId(): ?string
     {
-        return $this->id;
+    	return $this->uuid;
     }
-
-    public function getAanduidingInhoudingOfVermissing(): ?string
+    
+    public function getUuid(): ?string
     {
-        return $this->aanduidingInhoudingOfVermissing;
+    	return $this->uuid;
     }
 
     public function setAanduidingInhoudingOfVermissing(string $aanduidingInhoudingOfVermissing): self

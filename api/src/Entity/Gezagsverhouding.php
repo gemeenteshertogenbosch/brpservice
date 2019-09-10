@@ -3,42 +3,58 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\GezagsverhoudingRepository")
+ * @Gedmo\Loggable
  */
 class Gezagsverhouding
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @var \Ramsey\Uuid\UuidInterface
+	 *
+	 * @ORM\Id
+	 * @ORM\Column(type="uuid", unique=true)
+	 * @ORM\GeneratedValue(strategy="CUSTOM")
+	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+	 */
+	private $uuid;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="boolean")
      */
     private $indicatieCurateleRegister;
 
     /**
+     * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $indicatieGezagMinderjarige;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Gedmo\Versioned
+     * @ORM\Column(type="underInvestigation", nullable=true)
      */
     private $inOnderzoek;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\NatuurlijkPersoon", mappedBy="gezagsverhouding", cascade={"persist", "remove"})
+     * @Gedmo\Versioned
+     * @ORM\OneToOne(targetEntity="App\Entity\Ingeschrevenpersoon", mappedBy="gezagsverhouding", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $natuurlijkPersoon;
-
-    public function getId(): ?int
+    private $ingeschrevenpersoon;    
+    
+    // On an object level we stil want to be able to gett the id
+    public function getId(): ?string
     {
-        return $this->id;
+    	return $this->uuid;
+    }
+    
+    public function getUuid(): ?string
+    {
+    	return $this->uuid;
     }
 
     public function getIndicatieCurateleRegister(): ?bool
@@ -77,19 +93,19 @@ class Gezagsverhouding
         return $this;
     }
 
-    public function getNatuurlijkPersoon(): ?NatuurlijkPersoon
+    public function getIngeschrevenpersoon(): ?Ingeschrevenpersoon
     {
-    	return $this->natuurlijkPersoon;
+    	return $this->ingeschrevenpersoon;
     }
 
-    public function setNatuurlijkPersoon(?NatuurlijkPersoon $natuurlijkPersoon): self
+    public function setIngeschrevenpersoon(?Ingeschrevenpersoon $ingeschrevenpersoon): self
     {
-    	$this->natuurlijkPersoon= $natuurlijkPersoon;
+    	$this->ingeschrevenpersoon = $ingeschrevenpersoon;
 
         // set (or unset) the owning side of the relation if necessary
-    	$newGezagsverhouding = $natuurlijkPersoon=== null ? null : $this;
-    	if ($newGezagsverhouding !== $natuurlijkPersoon->getGezagsverhouding()) {
-    		$natuurlijkPersoon->setGezagsverhouding($newGezagsverhouding);
+    	$newGezagsverhouding = $ingeschrevenpersoon=== null ? null : $this;
+    	if ($newGezagsverhouding !== $ingeschrevenpersoon->getGezagsverhouding()) {
+    		$ingeschrevenpersoon->setGezagsverhouding($newGezagsverhouding);
         }
 
         return $this;
