@@ -3,13 +3,15 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OuderRepository")
  * @ApiResource(
- *     collectionOperations={},
+ *     collectionOperations={"get"={"method"="GET","path"="/ingeschrevenpersonen/{burgerservicenummer}/ouders.{_format}","swagger_context" = {"summary"="ingeschrevenNatuurlijkPersoonOuders", "description"="Beschrijving"}}},
  *     itemOperations={"get"={"method"="GET","path"="/ingeschrevenpersonen/{burgerservicenummer}/ouders/{uuid}.{_format}","swagger_context" = {"summary"="ingeschrevenNatuurlijkPersoonOuderUuid", "description"="Beschrijving"}}}
  * )
  * @Gedmo\Loggable
@@ -19,6 +21,8 @@ class Ouder
 	/**
 	 * @var \Ramsey\Uuid\UuidInterface
 	 *
+     * @Groups({"read", "write"})
+     * @ApiProperty(identifier=true)
 	 * @ORM\Id
 	 * @ORM\Column(type="uuid", unique=true)
 	 * @ORM\GeneratedValue(strategy="CUSTOM")
@@ -27,29 +31,34 @@ class Ouder
 	private $uuid;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\Column(type="string", length=255)
      */
     private $burgerservicenummer;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=7)
      */
     private $geslachtsaanduiding;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=7)
      */
     private $ouderAanduiding;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
-     * @ORM\Column(type="incompleteDate")
+     * @ORM\Column(type="incompleteDate", nullable=true)
      */
     private $datumIngangFamilierechtelijkeBetreking;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\OneToOne(targetEntity="App\Entity\NaamPersoon", inversedBy="ouder", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false, referencedColumnName="uuid")
@@ -57,12 +66,14 @@ class Ouder
     private $naam;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="underInvestigation", nullable=true)
      */
     private $inOnderzoek;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\OneToOne(targetEntity="App\Entity\Geboorte", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false, referencedColumnName="uuid")

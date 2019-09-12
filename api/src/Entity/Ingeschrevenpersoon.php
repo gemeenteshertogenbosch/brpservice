@@ -10,11 +10,14 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ApiResource(
- *      subresourceOperations={
+ *     normalizationContext={"groups"={"read"}},
+ *     denormalizationContext={"groups"={"write"}},
+ *     subresourceOperations={
  *          "api_ingeschrevenpersoons_kinderens_get_subresource"={
  *              "method"="GET",
  *              "path"="/ingeschrevenpersonen/{burgerservicenummer}/kinderen",
@@ -64,35 +67,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *                      },
  *                      {
  *                      	"in": "query",
- *                          "name": "familie_eerstegraad",
+ *                          "name": "familie__eerstegraad",
  *                          "description": "Filterd op de eerstegraads familie leden van een opgegeven burgerservicenummer",
- *                          "required": false,
- *                          "type": "string",
- *                          "maxLength": 9,
- *                          "minLength": 9
- *                      },
- *                      {
- *                      	"in": "query",
- *                          "name": "familie_tweedegraad",
- *                          "description": "Filterd op de tweedegraads familie leden van een opgegeven burgerservicenummer (inclusief leden in de eerste graad)",
- *                          "required": false,
- *                          "type": "string",
- *                          "maxLength": 9,
- *                          "minLength": 9
- *                      },
- *                      {
- *                      	"in": "query",
- *                          "name": "familie_derdegraad",
- *                          "description": "Filterd op de derdegraads familie leden van een opgegeven burgerservicenummer (inclusief leden in de tweedegraad)",
- *                          "required": false,
- *                          "type": "string",
- *                          "maxLength": 9,
- *                          "minLength": 9
- *                      },
- *                      {
- *                      	"in": "query",
- *                          "name": "familie_vierdegraad",
- *                          "description": "Filterd op de vierdegraads familie leden van een opgegeven burgerservicenummer (inclusief leden in de derdegraad)",
  *                          "required": false,
  *                          "type": "string",
  *                          "maxLength": 9,
@@ -251,6 +227,7 @@ class Ingeschrevenpersoon
 	/**
 	 * @var \Ramsey\Uuid\UuidInterface
 	 *
+     * @Groups({"read"})
      * @ApiProperty(identifier=true)
 	 * @ORM\Id
 	 * @ORM\Column(type="uuid", unique=true)
@@ -260,110 +237,121 @@ class Ingeschrevenpersoon
 	private $id;
 	
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=9)
      */
-    private $burgerservicenummer;
+	private $burgerservicenummer;
+	
+	/**
+	 * @Groups({"read", "write"})
+	 * @ORM\ManyToOne(targetEntity="App\Entity\NaamPersoon", inversedBy="ingeschrevenpersonen", cascade={"persist", "remove"})
+	 * @ORM\JoinColumn(nullable=false, referencedColumnName="uuid")
+	 */
+	private $naam;
+	
+	/**
+	 * @Groups({"read", "write"})
+	 * @ORM\ManyToOne(targetEntity="App\Entity\Geboorte", inversedBy="ingeschrevenpersonen", cascade={"persist", "remove"})
+	 * @ORM\JoinColumn(nullable=false, referencedColumnName="uuid")
+	 */
+	private $geboorte;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="boolean")
      */
     private $geheimhoudingPersoonsgegevens;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=7)
      */
     private $geslachtsaanduiding;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="integer", nullable=true)
      */
     private $leeftijd;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="incompleteDate",nullable=true)
      */
     private $datumEersteInschrijvingGBA;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="object")
      */
     private $kiesrecht;
 
     /**
-     * @Gedmo\Versioned
-     * @ORM\OneToOne(targetEntity="App\Entity\NaamPersoon", inversedBy="ingeschrevenpersoon", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false, referencedColumnName="uuid")
-     */
-    private $naam;
-
-    /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="underInvestigation", nullable=true)
      */
     private $inOnderzoek;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\OneToMany(targetEntity="App\Entity\Nationaliteit", mappedBy="ingeschrevenpersoon", orphanRemoval=true)
      */
     private $nationaliteit;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Geboorte", inversedBy="ingeschrevenpersoon", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=true, referencedColumnName="uuid")
-     */
-    private $geboorte;
-
-    /**
+     * @Groups({"read", "write"})
      * @ORM\OneToOne(targetEntity="App\Entity\OpschortingBijhouding", inversedBy="ingeschrevenpersoon", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true, referencedColumnName="uuid")
      */
     private $opschortingBijhouding;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\OneToOne(targetEntity="App\Entity\Overlijden", inversedBy="ingeschrevenpersoon", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true, referencedColumnName="uuid")
      */
     private $overlijden;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\OneToOne(targetEntity="App\Entity\Verblijfplaats", inversedBy="ingeschrevenpersoon", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true, referencedColumnName="uuid")
      */
     private $verblijfplaats;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\OneToOne(targetEntity="App\Entity\Gezagsverhouding", inversedBy="ingeschrevenpersoon", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true, referencedColumnName="uuid")
      */
     private $gezagsverhouding;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\OneToOne(targetEntity="App\Entity\Verblijfstitel", inversedBy="ingeschrevenpersoon", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true, referencedColumnName="uuid")
      */
     private $verblijfstitel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Ouder", mappedBy="ingeschrevenpersoon", orphanRemoval=true)
-     * @ApiSubresource
+     * @ORM\OneToMany(targetEntity="App\Entity\Ouder", mappedBy="ingeschrevenpersoon", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $ouders;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Kind", mappedBy="ingeschrevenpersoon", orphanRemoval=true)
-     * @ApiSubresource
+     * @ORM\OneToMany(targetEntity="App\Entity\Kind", mappedBy="ingeschrevenpersoon", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $kinderen;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Partner", mappedBy="ingeschrevenpersoon", orphanRemoval=true)
-     * @ApiSubresource
+     * @ORM\OneToMany(targetEntity="App\Entity\Partner", mappedBy="ingeschrevenpersoon", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $partners;
 
@@ -453,18 +441,6 @@ class Ingeschrevenpersoon
         return $this;
     }
 
-    public function getNaam(): ?NaamPersoon
-    {
-        return $this->naam;
-    }
-
-    public function setNaam(NaamPersoon $naam): self
-    {
-        $this->naam = $naam;
-
-        return $this;
-    }
-
     public function getInOnderzoek()
     {
         return $this->inOnderzoek;
@@ -504,18 +480,6 @@ class Ingeschrevenpersoon
                 $nationaliteit->setNatuurlijkPersoon(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getGeboorte(): ?Geboorte
-    {
-        return $this->geboorte;
-    }
-
-    public function setGeboorte(Geboorte $geboorte): self
-    {
-        $this->geboorte = $geboorte;
 
         return $this;
     }
@@ -592,7 +556,7 @@ class Ingeschrevenpersoon
     {
         if (!$this->ouders->contains($ouder)) {
             $this->ouders[] = $ouder;
-            $ouder->setNatuurlijkPersoon($this);
+            $ouder->setIngeschrevenpersoon($this);
         }
 
         return $this;
@@ -603,8 +567,8 @@ class Ingeschrevenpersoon
         if ($this->ouders->contains($ouder)) {
             $this->ouders->removeElement($ouder);
             // set the owning side to null (unless already changed)
-            if ($ouder->getNatuurlijkPersoon() === $this) {
-                $ouder->setNatuurlijkPersoon(null);
+            if ($ouder->getIngeschrevenpersoon() === $this) {
+                $ouder->setIngeschrevenpersoon(null);
             }
         }
 
@@ -619,23 +583,23 @@ class Ingeschrevenpersoon
         return $this->kinderen;
     }
 
-    public function addKinderen(Kind $kinderen): self
+    public function addKind(Kind $kinderen): self
     {
         if (!$this->kinderen->contains($kinderen)) {
             $this->kinderen[] = $kinderen;
-            $kinderen->setNatuurlijkPersoon($this);
+            $kinderen->setIngeschrevenpersoon($this);
         }
 
         return $this;
     }
 
-    public function removeKinderen(Kind $kinderen): self
+    public function removeKind(Kind $kinderen): self
     {
         if ($this->kinderen->contains($kinderen)) {
             $this->kinderen->removeElement($kinderen);
             // set the owning side to null (unless already changed)
-            if ($kinderen->getNatuurlijkPersoon() === $this) {
-                $kinderen->setNatuurlijkPersoon(null);
+            if ($kinderen->getIngeschrevenpersoon() === $this) {
+                $kinderen->setIngeschrevenpersoon(null);
             }
         }
 
@@ -654,7 +618,7 @@ class Ingeschrevenpersoon
     {
         if (!$this->partners->contains($partner)) {
             $this->partners[] = $partner;
-            $partner->setNatuurlijkPersoon($this);
+            $partner->setIngeschrevenpersoon($this);
         }
 
         return $this;
@@ -665,10 +629,34 @@ class Ingeschrevenpersoon
         if ($this->partners->contains($partner)) {
             $this->partners->removeElement($partner);
             // set the owning side to null (unless already changed)
-            if ($partner->getNatuurlijkPersoon() === $this) {
-                $partner->setNatuurlijkPersoon(null);
+            if ($partner->getIngeschrevenpersoon() === $this) {
+                $partner->setIngeschrevenpersoon(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getGeboorte(): ?Geboorte
+    {
+        return $this->geboorte;
+    }
+
+    public function setGeboorte(?Geboorte $geboorte): self
+    {
+        $this->geboorte = $geboorte;
+
+        return $this;
+    }
+
+    public function getNaam(): ?NaamPersoon
+    {
+        return $this->naam;
+    }
+
+    public function setNaam(?NaamPersoon $naam): self
+    {
+        $this->naam = $naam;
 
         return $this;
     }

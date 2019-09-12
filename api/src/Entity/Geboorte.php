@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -14,6 +17,7 @@ class Geboorte
 	/**
 	 * @var \Ramsey\Uuid\UuidInterface
 	 *
+     * @Groups({"read", "write"})
 	 * @ORM\Id
 	 * @ORM\Column(type="uuid", unique=true)
 	 * @ORM\GeneratedValue(strategy="CUSTOM")
@@ -23,6 +27,7 @@ class Geboorte
 
     /**
      * @todo nullable moet hier wel vanaf
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="App\Entity\Waardetabel")
      * @ORM\JoinColumn(nullable=true)
@@ -31,6 +36,7 @@ class Geboorte
     
     /**
      * @todo nullable moet hier wel vanaf
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="App\Entity\Waardetabel")
      * @ORM\JoinColumn(nullable=true)
@@ -38,22 +44,29 @@ class Geboorte
     private $plaats;
     
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="incompleteDate",nullable=true)
      */
     private $datum;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="underInvestigation", nullable=true)
      */
     private $inOnderzoek;
-    
+
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Ingeschrevenpersoon", mappedBy="overlijden", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToMany(targetEntity="App\Entity\Ingeschrevenpersoon", mappedBy="geboorte")
      */
-    private $ingeschrevenpersoon;    
+    private $ingeschrevenpersonen;
+
+    public function __construct()
+    {
+        $this->ingeschrevenpersonen = new ArrayCollection();
+    }
+    
     
     // On an object level we stil want to be able to gett the id
     public function getId(): ?string
@@ -113,22 +126,35 @@ class Geboorte
 
         return $this;
     }
-    
-    public function getIngeschrevenpersoon(): ?Ingeschrevenpersoon
+
+    /**
+     * @return Collection|Ingeschrevenpersoon[]
+     */
+    public function getIngeschrevenpersonen(): Collection
     {
-    	return $this->ingeschrevenpersoon;
+        return $this->ingeschrevenpersonen;
     }
-    
-    public function setIngeschrevenpersoon(?Ingeschrevenpersoon $ingeschrevenpersoon): self
+
+    public function addIngeschrevenpersonen(Ingeschrevenpersoon $ingeschrevenpersonen): self
     {
-    	$this->ingeschrevenpersoon = $ingeschrevenpersoon;
-    	
-    	// set (or unset) the owning side of the relation if necessary
-    	$newGeboorte = $ingeschrevenpersoon === null ? null : $this;
-    	if ($newGeboorte!== $ingeschrevenpersoon->getGeboorte()) {
-    		$ingeschrevenpersoon->setGeboorte($newGeboorte);
-    	}
-    	
-    	return $this;
+        if (!$this->ingeschrevenpersonen->contains($ingeschrevenpersonen)) {
+            $this->ingeschrevenpersonen[] = $ingeschrevenpersonen;
+            $ingeschrevenpersonen->setGeboorte($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIngeschrevenpersonen(Ingeschrevenpersoon $ingeschrevenpersonen): self
+    {
+        if ($this->ingeschrevenpersonen->contains($ingeschrevenpersonen)) {
+            $this->ingeschrevenpersonen->removeElement($ingeschrevenpersonen);
+            // set the owning side to null (unless already changed)
+            if ($ingeschrevenpersonen->getGeboorte() === $this) {
+                $ingeschrevenpersonen->setGeboorte(null);
+            }
+        }
+
+        return $this;
     }
 }

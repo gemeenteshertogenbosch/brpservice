@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -14,6 +15,7 @@ class Verblijfplaats
 	/**
 	 * @var \Ramsey\Uuid\UuidInterface
 	 *
+     * @Groups({"read", "write"})
 	 * @ORM\Id
 	 * @ORM\Column(type="uuid", unique=true)
 	 * @ORM\GeneratedValue(strategy="CUSTOM")
@@ -22,124 +24,146 @@ class Verblijfplaats
 	private $uuid;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $aanduidingBijHuisnummer;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $funtieAdres;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $huisletter;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="integer", nullable=true)
      */
     private $huisnummer;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $huisnummertoevoeging;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $identificatiecodeNummeraanduiding;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $identificatiecodeVerblijfplaats;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="boolean")
      */
     private $indentificatieVestigingVanuitBuitenland  = false;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $locatiebeschrijving;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $naamOpenbareRuimte;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $postcode;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $straatnaam;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="boolean")
      */
     private $vanuitVertrokkenOnbekendWaarheen = false;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $woonplaatsnaam;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\Column(type="object", nullable=true)
      */
     private $datumAanvangAdreshouding;
 
     /**
-     * @ORM\Column(type="object", nullable=true)
+     * @Groups({"read", "write"})
+     * @Gedmo\Versioned
+     * @ORM\Column(type="incompleteDate", nullable=true)
      */
     private $datumIngangGeldigheid;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="incompleteDate", nullable=true)
      */
     private $datumInschrijvingInGemeente;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="incompleteDate", nullable=true)
      */
     private $datumVestigingInNederland;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="incompleteDate", nullable=true)
      */
     private $gemeenteVanInschrijving;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="App\Entity\Waardetabel")
      */
     private $landVanwaarIngeschreven;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\OneToOne(targetEntity="App\Entity\VerblijfBuitenland", inversedBy="verblijfplaats", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true, referencedColumnName="uuid")
@@ -147,6 +171,7 @@ class Verblijfplaats
     private $verblijfBuitenland;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="underInvestigation", nullable=true)
      */

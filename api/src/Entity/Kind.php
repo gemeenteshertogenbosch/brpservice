@@ -3,13 +3,15 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\KindRepository")
  * @ApiResource(
- *     collectionOperations={},
+ *     collectionOperations={"get"={"method"="GET","path"="/ingeschrevenpersonen/{burgerservicenummer}/kinderen.{_format}","swagger_context" = {"summary"="ingeschrevenNatuurlijkPersoonKinderen", "description"="Beschrijving"}}},
  *     itemOperations={"get"={"method"="GET","path"="/ingeschrevenpersonen/{burgerservicenummer}/kinderen/{uuid}.{_format}","swagger_context" = {"summary"="ingeschrevenNatuurlijkPersoonKindUuid", "description"="Beschrijving"}}}
  * )
  * @Gedmo\Loggable
@@ -19,6 +21,8 @@ class Kind
 	/**
 	 * @var \Ramsey\Uuid\UuidInterface
 	 *
+     * @Groups({"read", "write"})
+     * @ApiProperty(identifier=true)
 	 * @ORM\Id
 	 * @ORM\Column(type="uuid", unique=true)
 	 * @ORM\GeneratedValue(strategy="CUSTOM")
@@ -32,26 +36,30 @@ class Kind
     private $burgerservicenummer;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\Column(type="integer", nullable=true)
      */
     private $leeftijd;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="underInvestigation", nullable=true)
      */
     private $inOnderzoek;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
-     * @ORM\OneToOne(targetEntity="App\Entity\NaamPersoon", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\NaamPersoon", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false, referencedColumnName="uuid")
      */
     private $naam;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
-     * @ORM\OneToOne(targetEntity="App\Entity\Geboorte", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Geboorte", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false, referencedColumnName="uuid")
      */
     private $geboorte;

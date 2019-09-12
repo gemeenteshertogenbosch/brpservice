@@ -18,7 +18,23 @@ class IngeschrevenpersoonRepository extends ServiceEntityRepository
     {
     	parent::__construct($registry, Ingeschrevenpersoon::class);
     }
-
+    
+    public function getFamilly($bsn)
+    {
+        return $this->createQueryBuilder('i')
+        ->leftJoin('i.kinderen', 'k')
+        ->leftJoin('i.partners', 'p')
+        ->leftJoin('i.ouders', 'o')
+        ->where($qb->expr()->orX(
+            $qb->expr()->eq('k.burgerservicenummer', $bsn),
+            $qb->expr()->eq('p.burgerservicenummer', $bsn),
+            $qb->expr()->eq('o.burgerservicenummer', $bsn),
+         ))
+        ->getQuery()
+        ->getResult()
+        ;
+    }
+    
     // /**
     //  * @return NatuurlijkPersoon[] Returns an array of NatuurlijkPersoon objects
     //  */

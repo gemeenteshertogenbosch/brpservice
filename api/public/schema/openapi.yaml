@@ -22,42 +22,42 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+                  $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             application/ld+json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+                  $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             application/vnd.api+json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+                  $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+                  $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             application/xml:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+                  $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             application/x-yaml:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+                  $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             text/csv:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+                  $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             text/html:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+                  $ref: '#/components/schemas/Ingeschrevenpersoon-read'
       parameters:
         -
           name: page
@@ -85,28 +85,28 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
+                $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
+                $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
+                $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
+                $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
+                $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
+                $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
+                $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
+                $ref: '#/components/schemas/Ingeschrevenpersoon-read'
         404:
           description: 'Resource not found'
   '/ingeschrevenpersonen/{burgerservicenummer}':
@@ -123,42 +123,100 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+                  $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             application/ld+json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+                  $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             application/vnd.api+json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+                  $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+                  $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             application/xml:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+                  $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             application/x-yaml:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+                  $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             text/csv:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+                  $ref: '#/components/schemas/Ingeschrevenpersoon-read'
             text/html:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+                  $ref: '#/components/schemas/Ingeschrevenpersoon-read'
+      parameters:
+        -
+          name: page
+          in: query
+          required: false
+          description: 'The collection page number'
+          schema:
+            type: integer
+  '/ingeschrevenpersonen/{burgerservicenummer}/kinderen':
+    get:
+      tags:
+        - Kind
+      operationId: getKindCollection
+      summary: 'Retrieves the collection of Kind resources.'
+      responses:
+        200:
+          description: 'Kind collection response'
+          content:
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kind'
+            application/ld+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kind'
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kind'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kind'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kind'
+            application/x-yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kind'
+            text/csv:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kind'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kind'
       parameters:
         -
           name: page
@@ -210,158 +268,11 @@ paths:
                 $ref: '#/components/schemas/Kind'
         404:
           description: 'Resource not found'
-  '/ingeschrevenpersonen/{burgerservicenummer}/ouders/{uuid}':
+  '/ingeschrevenpersonen/{burgerservicenummer}/ouders':
     get:
       tags:
         - Ouder
-      operationId: getOuderItem
-      summary: 'Retrieves a Ouder resource.'
-      parameters:
-        -
-          name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: 'Ouder resource response'
-          content:
-            application/hal+json:
-              schema:
-                $ref: '#/components/schemas/Ouder'
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Ouder'
-            application/vnd.api+json:
-              schema:
-                $ref: '#/components/schemas/Ouder'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Ouder'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Ouder'
-            application/x-yaml:
-              schema:
-                $ref: '#/components/schemas/Ouder'
-            text/csv:
-              schema:
-                $ref: '#/components/schemas/Ouder'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/Ouder'
-        404:
-          description: 'Resource not found'
-  '/ingeschrevenpersonen/{burgerservicenummer}/partners/{uuid}':
-    get:
-      tags:
-        - Partner
-      operationId: getPartnerItem
-      summary: 'Retrieves a Partner resource.'
-      parameters:
-        -
-          name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: 'Partner resource response'
-          content:
-            application/hal+json:
-              schema:
-                $ref: '#/components/schemas/Partner'
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Partner'
-            application/vnd.api+json:
-              schema:
-                $ref: '#/components/schemas/Partner'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Partner'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Partner'
-            application/x-yaml:
-              schema:
-                $ref: '#/components/schemas/Partner'
-            text/csv:
-              schema:
-                $ref: '#/components/schemas/Partner'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/Partner'
-        404:
-          description: 'Resource not found'
-  '/ingeschrevenpersoons/{id}/kinderens':
-    get:
-      tags:
-        - Kind
-        - Ingeschrevenpersoon
-      operationId: api_ingeschrevenpersoons_kinderens_get_subresource
-      summary: 'Retrieves the collection of Kind resources.'
-      responses:
-        200:
-          description: 'Kind collection response'
-          content:
-            application/hal+json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Kind'
-            application/ld+json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Kind'
-            application/vnd.api+json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Kind'
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Kind'
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Kind'
-            application/x-yaml:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Kind'
-            text/csv:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Kind'
-            text/html:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Kind'
-        404:
-          description: 'Resource not found'
-      parameters:
-        -
-          name: id
-          in: path
-          required: true
-          schema:
-            type: string
-  '/ingeschrevenpersoons/{id}/ouders':
-    get:
-      tags:
-        - Ouder
-        - Ingeschrevenpersoon
-      operationId: api_ingeschrevenpersoons_ouders_get_subresource
+      operationId: getOuderCollection
       summary: 'Retrieves the collection of Ouder resources.'
       responses:
         200:
@@ -407,8 +318,20 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Ouder'
-        404:
-          description: 'Resource not found'
+      parameters:
+        -
+          name: page
+          in: query
+          required: false
+          description: 'The collection page number'
+          schema:
+            type: integer
+  '/ingeschrevenpersonen/{burgerservicenummer}/ouders/{uuid}':
+    get:
+      tags:
+        - Ouder
+      operationId: getOuderItem
+      summary: 'Retrieves a Ouder resource.'
       parameters:
         -
           name: id
@@ -416,12 +339,41 @@ paths:
           required: true
           schema:
             type: string
-  '/ingeschrevenpersoons/{id}/partners':
+      responses:
+        200:
+          description: 'Ouder resource response'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Ouder'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Ouder'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Ouder'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ouder'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Ouder'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Ouder'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Ouder'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Ouder'
+        404:
+          description: 'Resource not found'
+  '/ingeschrevenpersonen/{burgerservicenummer}/partners':
     get:
       tags:
         - Partner
-        - Ingeschrevenpersoon
-      operationId: api_ingeschrevenpersoons_partners_get_subresource
+      operationId: getPartnerCollection
       summary: 'Retrieves the collection of Partner resources.'
       responses:
         200:
@@ -467,8 +419,20 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Partner'
-        404:
-          description: 'Resource not found'
+      parameters:
+        -
+          name: page
+          in: query
+          required: false
+          description: 'The collection page number'
+          schema:
+            type: integer
+  '/ingeschrevenpersonen/{burgerservicenummer}/partners/{uuid}':
+    get:
+      tags:
+        - Partner
+      operationId: getPartnerItem
+      summary: 'Retrieves a Partner resource.'
       parameters:
         -
           name: id
@@ -476,6 +440,36 @@ paths:
           required: true
           schema:
             type: string
+      responses:
+        200:
+          description: 'Partner resource response'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Partner'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Partner'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Partner'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Partner'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Partner'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Partner'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Partner'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Partner'
+        404:
+          description: 'Resource not found'
   /reisdocuments:
     get:
       tags:
@@ -1138,7 +1132,7 @@ paths:
         description: 'The updated Waardetabel resource'
 components:
   schemas:
-    Ingeschrevenpersoon:
+    Ingeschrevenpersoon-read:
       type: object
       description: ''
       properties:
@@ -1146,6 +1140,10 @@ components:
           readOnly: true
           type: string
         burgerservicenummer:
+          type: string
+        naam:
+          type: string
+        geboorte:
           type: string
         geheimhouding_persoonsgegevens:
           type: boolean
@@ -1156,15 +1154,11 @@ components:
         datum_eerste_inschrijving_g_b_a: {  }
         kiesrecht:
           type: string
-        naam:
-          type: string
         in_onderzoek: {  }
         nationaliteit:
           type: array
           items:
             type: string
-        geboorte:
-          type: string
         opschorting_bijhouding:
           type: string
         overlijden:
@@ -1175,18 +1169,6 @@ components:
           type: string
         verblijfstitel:
           type: string
-        ouders:
-          type: array
-          items:
-            type: string
-        kinderen:
-          type: array
-          items:
-            type: string
-        partners:
-          type: array
-          items:
-            type: string
     Kind:
       type: object
       description: ''

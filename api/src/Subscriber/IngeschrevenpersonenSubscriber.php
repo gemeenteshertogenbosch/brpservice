@@ -43,21 +43,22 @@ class IngeschrevenpersonenSubscriber implements EventSubscriberInterface
 	{
 		$result = $event->getControllerResult();
 		$method = $event->getRequest()->getMethod();
+		
+		//var_dump( $event->getRequest()->get('_route'));
 				
 		// Lats make sure that some one posts correctly
-		if (Request::METHOD_GET !== $method || $event->getRequest()->get('_route') != 'api_ingeschrevenpersoons_get_on_bsn_collection') { 
+		if (Request::METHOD_GET !== $method || $event->getRequest()->get('_route') != 'api_ingeschrevenpersoons_get_collection') { 
 			return;
 		}
 		
 		$expand = $event->getRequest()->query->get('expand');
 		$fields = $event->getRequest()->query->get('fields');
-		$burgerservicenummer = $event->getRequest()->query->get('burgerservicenummer');
-		$familieEerstegraad = $event->getRequest()->query->get('familie_eerstegraad');
-		$familieTweedegraad = $event->getRequest()->query->get('familie_tweedegraad');
-		$familieDerdegraad = $event->getRequest()->query->get('familie_derdegraad');
-		$familieVierdegraad = $event->getRequest()->query->get('familie_vierdegraad');
+		$burgerservicenummer = strval ($event->getRequest()->query->get('burgerservicenummer'));
+		$familieEerstegraad =  strval ($event->getRequest()->query->get('familie__eerstegraad'));
+		//$familieTweedegraad = strval ($event->getRequest()->query->get('familie_tweedegraad'));
+		//$familieDerdegraad = strval ($event->getRequest()->query->get('familie_derdegraad'));
+		//$familieVierdegraad = strval ($event->getRequest()->query->get('familie_vierdegraad'));
 		$geboorteDatum = $event->getRequest()->query->get('geboorte__datum');
-		$geslachtsaanduiding = $event->getRequest()->query->get('c');
 		$geslachtsaanduiding = $event->getRequest()->query->get('geslachtsaanduiding');
 		$inclusiefoverledenpersonen = $event->getRequest()->query->get('inclusiefoverledenpersonen');
 		$naamGeslachtsnaam = $event->getRequest()->query->get('naam__geslachtsnaam');
@@ -71,11 +72,44 @@ class IngeschrevenpersonenSubscriber implements EventSubscriberInterface
 		$verblijfplaatsNaamopenbareruimte = $event->getRequest()->query->get('verblijfplaats__naamopenbareruimte');
 		$verblijfplaatsPostcode = $event->getRequest()->query->get('verblijfplaats__postcode');		
 		
-		$result = $this->em->getRepository(Ingeschrevenpersoon::class)->findOneBy(array('burgerservicenummer' => $burgerservicenummer));
+		$qb = $this->em->getRepository(Ingeschrevenpersoon::class)->createQueryBuilder('i')
+		->leftJoin('i.naam', 'n')
+		->leftJoin('i.verblijfplaats', 'v');
+		
+		if($burgerservicenummer){
+		    $qb->andWhere('i.burgerservicenummer = :burgerservicenummer')
+		    ->setParameter('burgerservicenummer', $burgerservicenummer);
+		    
+		}
+		
+		if($familieEerstegraad){
+		    $qb->leftJoin('i.kinderen', 'k')
+		    ->leftJoin('i.partners', 'p')
+		    ->leftJoin('i.ouders', 'o')
+		    ->where($qb->expr()->orX(
+		        $qb->expr()->eq('k.burgerservicenummer', ':familieEerstegraad'),
+		        $qb->expr()->eq('p.burgerservicenummer', ':familieEerstegraad'),
+		        $qb->expr()->eq('o.burgerservicenummer', ':familieEerstegraad'),
+		        ))
+		        ->setParameter('familieEerstegraad', $familieEerstegraad);
+		}
+		
+		//
+		$results = $qb->getQuery()->getResult();
+		// Lets extend 
+		$response = [];
+		$response['_links'] = [];
+		$response['_links']['self'] = [];
+		$response['_links']['items'] = [];
+		$response['_links']['self']['href'] =  "/ingeschrevenpersonen"; /*todo dynamisch maken */
+		$response['_embedded'] = [];
+		$response['_embedded']['item'] = $results;
+		$response['totalItems'] = count($results);
+		$response['itemsPerPage'] = 30;
 		
 		// now we need to overide the normal subscriber
 		$json = $this->serializer->serialize(
-			$result,
+		    $response,
 			'jsonhal',['enable_max_depth' => true]
 		);
 		

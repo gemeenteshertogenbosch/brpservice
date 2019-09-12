@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -14,6 +17,7 @@ class NaamPersoon
 	/**
 	 * @var \Ramsey\Uuid\UuidInterface
 	 *
+     * @Groups({"read", "write"})
 	 * @ORM\Id
 	 * @ORM\Column(type="uuid", unique=true)
 	 * @ORM\GeneratedValue(strategy="CUSTOM")
@@ -22,58 +26,70 @@ class NaamPersoon
 	private $uuid;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $geslachtsnaam;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $voorletters;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $voornamen;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $voorvoegsel;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="underInvestigation", nullable=true)
      */
     private $inOnderzoek;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $aanhef;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $aanschrijfwijze;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $gebuikInLopendeTekst;
 
     /**
-     * @Gedmo\Versioned
-     * @ORM\OneToOne(targetEntity="App\Entity\Ingeschrevenpersoon", mappedBy="naam", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Ingeschrevenpersoon", mappedBy="naam")
      */
-    private $ingeschrevenpersoon;
+    private $ingeschrevenpersonen;
+
+    public function __construct()
+    {
+        $this->ingeschrevenpersonen = new ArrayCollection();
+    }
     
     // On an object level we stil want to be able to gett the id
     public function getId(): ?string
@@ -182,18 +198,32 @@ class NaamPersoon
         return $this;
     }
 
-    public function getIngeschrevenpersoon(): ?Ingeschrevenpersoon
+    /**
+     * @return Collection|Ingeschrevenpersoon[]
+     */
+    public function getIngeschrevenpersonen(): Collection
     {
-    	return $this->ingeschrevenpersoon ;
+        return $this->ingeschrevenpersonen;
     }
 
-    public function setIngeschrevenpersoon(Ingeschrevenpersoon $ingeschrevenpersoon): self
+    public function addIngeschrevenpersonen(Ingeschrevenpersoon $ingeschrevenpersonen): self
     {
-    	$this->ingeschrevenpersoon = $ingeschrevenpersoon;
+        if (!$this->ingeschrevenpersonen->contains($ingeschrevenpersonen)) {
+            $this->ingeschrevenpersonen[] = $ingeschrevenpersonen;
+            $ingeschrevenpersonen->setNaam($this);
+        }
 
-        // set the owning side of the relation if necessary
-    	if ($this !== $ingeschrevenpersoon->getNaam()) {
-    		$ingeschrevenpersoon->setNaam($this);
+        return $this;
+    }
+
+    public function removeIngeschrevenpersonen(Ingeschrevenpersoon $ingeschrevenpersonen): self
+    {
+        if ($this->ingeschrevenpersonen->contains($ingeschrevenpersonen)) {
+            $this->ingeschrevenpersonen->removeElement($ingeschrevenpersonen);
+            // set the owning side to null (unless already changed)
+            if ($ingeschrevenpersonen->getNaam() === $this) {
+                $ingeschrevenpersonen->setNaam(null);
+            }
         }
 
         return $this;

@@ -3,13 +3,15 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PartnerRepository")
  * @ApiResource(
- *     collectionOperations={},
+ *     collectionOperations={"get"={"method"="GET","path"="/ingeschrevenpersonen/{burgerservicenummer}/partners.{_format}","swagger_context" = {"summary"="ingeschrevenNatuurlijkPersoonPartnerUuid", "description"="Beschrijving"}}},
  *     itemOperations={"get"={"method"="GET","path"="/ingeschrevenpersonen/{burgerservicenummer}/partners/{uuid}.{_format}","swagger_context" = {"summary"="ingeschrevenNatuurlijkPersoonPartnerUuid", "description"="Beschrijving"}}}
  * )
  * @ApiResource
@@ -20,6 +22,7 @@ class Partner
 	/**
 	 * @var \Ramsey\Uuid\UuidInterface
 	 *
+     * @ApiProperty(identifier=true)
 	 * @ORM\Id
 	 * @ORM\Column(type="uuid", unique=true)
 	 * @ORM\GeneratedValue(strategy="CUSTOM")
@@ -28,23 +31,27 @@ class Partner
     private $uuid;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\Column(type="string", length=9)
      */
     private $burgerservicenummer;
 
     /**
+     * @Groups({"read", "write"})
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
      */
     private $geslachtsaanduiding;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\OneToOne(targetEntity="App\Entity\NaamPersoon", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false, referencedColumnName="uuid")
      */
     private $naam;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\OneToOne(targetEntity="App\Entity\Geboorte", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false, referencedColumnName="uuid")
      */
@@ -52,7 +59,7 @@ class Partner
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\AangaanHuwelijkPartnerschap", inversedBy="partner", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false, referencedColumnName="uuid")
+     * @ORM\JoinColumn(nullable=true, referencedColumnName="uuid")
      */
     private $aangaanHuwelijkPartnerschap;
 
