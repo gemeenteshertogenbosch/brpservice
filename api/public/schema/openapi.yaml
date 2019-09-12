@@ -66,6 +66,107 @@ paths:
           description: 'The collection page number'
           schema:
             type: integer
+  '/ingeschrevenpersonen/uuid/{id}':
+    get:
+      tags:
+        - Ingeschrevenpersoon
+      operationId: getIngeschrevenpersoonItem
+      summary: 'Retrieves a Ingeschrevenpersoon resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Ingeschrevenpersoon resource response'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Ingeschrevenpersoon'
+        404:
+          description: 'Resource not found'
+  '/ingeschrevenpersonen/{burgerservicenummer}':
+    get:
+      tags:
+        - Ingeschrevenpersoon
+      operationId: get_on_bsnIngeschrevenpersoonCollection
+      summary: 'Retrieves the collection of Ingeschrevenpersoon resources.'
+      responses:
+        200:
+          description: 'Ingeschrevenpersoon collection response'
+          content:
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/ld+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+            application/x-yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+            text/csv:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingeschrevenpersoon'
+      parameters:
+        -
+          name: page
+          in: query
+          required: false
+          description: 'The collection page number'
+          schema:
+            type: integer
   '/ingeschrevenpersonen/{burgerservicenummer}/kinderen/{uuid}':
     get:
       tags:
@@ -195,208 +296,6 @@ paths:
                 $ref: '#/components/schemas/Partner'
         404:
           description: 'Resource not found'
-  '/ingeschrevenpersoons/{id}':
-    get:
-      tags:
-        - Ingeschrevenpersoon
-      operationId: getIngeschrevenpersoonItem
-      summary: 'Retrieves a Ingeschrevenpersoon resource.'
-      parameters:
-        -
-          name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: 'Ingeschrevenpersoon resource response'
-          content:
-            application/hal+json:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            application/vnd.api+json:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            application/x-yaml:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            text/csv:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-        404:
-          description: 'Resource not found'
-    delete:
-      tags:
-        - Ingeschrevenpersoon
-      operationId: deleteIngeschrevenpersoonItem
-      summary: 'Removes the Ingeschrevenpersoon resource.'
-      responses:
-        204:
-          description: 'Ingeschrevenpersoon resource deleted'
-        404:
-          description: 'Resource not found'
-      parameters:
-        -
-          name: id
-          in: path
-          required: true
-          schema:
-            type: string
-    put:
-      tags:
-        - Ingeschrevenpersoon
-      operationId: putIngeschrevenpersoonItem
-      summary: 'Replaces the Ingeschrevenpersoon resource.'
-      parameters:
-        -
-          name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: 'Ingeschrevenpersoon resource updated'
-          content:
-            application/hal+json:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            application/vnd.api+json:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            application/x-yaml:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            text/csv:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-        400:
-          description: 'Invalid input'
-        404:
-          description: 'Resource not found'
-      requestBody:
-        content:
-          application/hal+json:
-            schema:
-              $ref: '#/components/schemas/Ingeschrevenpersoon'
-          application/ld+json:
-            schema:
-              $ref: '#/components/schemas/Ingeschrevenpersoon'
-          application/vnd.api+json:
-            schema:
-              $ref: '#/components/schemas/Ingeschrevenpersoon'
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Ingeschrevenpersoon'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Ingeschrevenpersoon'
-          application/x-yaml:
-            schema:
-              $ref: '#/components/schemas/Ingeschrevenpersoon'
-          text/csv:
-            schema:
-              $ref: '#/components/schemas/Ingeschrevenpersoon'
-          text/html:
-            schema:
-              $ref: '#/components/schemas/Ingeschrevenpersoon'
-        description: 'The updated Ingeschrevenpersoon resource'
-    patch:
-      tags:
-        - Ingeschrevenpersoon
-      operationId: patchIngeschrevenpersoonItem
-      summary: 'Updates the Ingeschrevenpersoon resource.'
-      parameters:
-        -
-          name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: 'Ingeschrevenpersoon resource updated'
-          content:
-            application/hal+json:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            application/vnd.api+json:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            application/x-yaml:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            text/csv:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/Ingeschrevenpersoon'
-        400:
-          description: 'Invalid input'
-        404:
-          description: 'Resource not found'
-      requestBody:
-        content:
-          application/hal+json:
-            schema:
-              $ref: '#/components/schemas/Ingeschrevenpersoon'
-          application/ld+json:
-            schema:
-              $ref: '#/components/schemas/Ingeschrevenpersoon'
-          application/vnd.api+json:
-            schema:
-              $ref: '#/components/schemas/Ingeschrevenpersoon'
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Ingeschrevenpersoon'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Ingeschrevenpersoon'
-          application/x-yaml:
-            schema:
-              $ref: '#/components/schemas/Ingeschrevenpersoon'
-          text/csv:
-            schema:
-              $ref: '#/components/schemas/Ingeschrevenpersoon'
-          text/html:
-            schema:
-              $ref: '#/components/schemas/Ingeschrevenpersoon'
-        description: 'The updated Ingeschrevenpersoon resource'
   '/ingeschrevenpersoons/{id}/kinderens':
     get:
       tags:
@@ -1288,10 +1187,6 @@ components:
           type: array
           items:
             type: string
-        reisdocumenten:
-          type: array
-          items:
-            type: string
     Kind:
       type: object
       description: ''
@@ -1366,6 +1261,9 @@ components:
         id:
           readOnly: true
           type: integer
+        uuid:
+          readOnly: true
+          type: string
         aanduiding_inhouding_of_vermissing:
           type: string
         reisdocumentnummer:
