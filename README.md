@@ -1,6 +1,6 @@
 # About this component
 
-This is an implementation of the VNG BRP referentie component, with to goal of providing an "in between solution" for applications that need the national BRP but have an production date before the prodction date of the nation BRP. A such it aims to provide a National BRP experience for the time being.  
+This is an implementation of the VNG BRP reference component, with to goal of providing an "in between solution" for applications that need the national BRP but have an production date before the prodction date of the nation BRP. A such it aims to provide a National BRP experience for the time being.  
 
 
 ## Credits
