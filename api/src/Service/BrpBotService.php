@@ -15,8 +15,10 @@
 
 namespace App\Service;
 
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
+use Symfony\Component\Cache\Adapter\AdapterInterface as CacheInterface;
 
 use App\Entity\Request;
 
