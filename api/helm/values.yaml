@@ -4,6 +4,7 @@
 
 php:
   repository: docker.io/conduction/brp-php
+  repository: docker.io/conduction/protocomponent-php
   tag: latest
   pullPolicy: Always
   replicaCount: 1
@@ -13,14 +14,14 @@ php:
   debug: '1'
   secret: ""
   corsAllowOrigin: ['*']
-  trustedHosts: '^(.+\.)?common-ground\.dev$|^(.+\.)?zaakonline\.nl$|^example\.com$|^(.+\.)?178.128.142.152$|178.128.142.152|localhost'
+  trustedHosts: '^(.+\.)?common-ground\.dev$|^(.+\.)?zaakonline\.nl$|^(.+\.)?conduction\.nl$|^example\.com$|^(.+\.)?178.128.142.152$|178.128.142.152|localhost'
   trustedProxies:
     - 10.0.0.0/8
     - 172.16.0.0/12
     - 192.168.0.0/16
 
 nginx:
-  repository: docker.io/conduction/brp-nginx
+  repository: docker.io/conduction/protocomponent-nginx
   tag: latest
   pullPolicy: Always
   replicaCount: 1
@@ -28,7 +29,7 @@ nginx:
 varnish:
   enabled: true
   #url: https://example.com
-  repository: docker.io/conduction/brp-varnish
+  repository: docker.io/conduction/protocomponent-varnish
   tag: latest
   pullPolicy: Always
   replicaCount: 1
